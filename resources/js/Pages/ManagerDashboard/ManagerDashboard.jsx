@@ -1,3 +1,5 @@
+import AddProductionCost from "./AddProduction.jsx";
+
 export default function ManagerDashboard() {
     return (
         <>
@@ -9,6 +11,7 @@ export default function ManagerDashboard() {
                     Your React frontend is now seamlessly integrated with Laravel.
                 </p>
             </div>
+            <AddProductionCost />
         </>
     );
 }

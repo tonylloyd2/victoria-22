@@ -98,11 +98,14 @@ export default function AdminDashboard() {
         {/* Main Content */}
         <div className="ml-64">
           {/* Header */}
-          <div className="bg-white shadow-md border-b border-gray-200 w-full fixed z-10">
+          <div className="bg-white shadow-md border-b border-gray-200 w-full fixed z-10 top-0 left-0">
             <div className="flex justify-between items-center h-16 px-6">
+              {/* Page Title */}
               <h1 className="text-2xl font-semibold text-gray-800">
                 {activePage.charAt(0).toUpperCase() + activePage.slice(1)}
               </h1>
+
+              {/* Profile Button with Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -111,7 +114,8 @@ export default function AdminDashboard() {
                   <span className="mr-2">Admin</span>
                   <ChevronDown className="h-4 w-4" />
                 </button>
-                
+
+                {/* Dropdown Menu */}
                 {showProfileMenu && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
@@ -128,7 +132,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-                 <ProductionList />
+
           {/* Content Area with padding for fixed header */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-20">
             <Routes>

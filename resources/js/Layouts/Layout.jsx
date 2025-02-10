@@ -15,7 +15,7 @@ export default function Layout({ children }) {
                             <Link className="nav-link" href="/login">
                                 Login
                             </Link>
-                            <Link className="nav-link" href="/register"> register
+                            <Link className="nav-link" href="/register">Customer registration
                             </Link>
                         </>
                     )}

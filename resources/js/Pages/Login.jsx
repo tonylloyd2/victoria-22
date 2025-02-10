@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
+import './login.css'; // Make sure to import the CSS file
 
 export default function Login() {
     const [email, setEmail] = useState('');

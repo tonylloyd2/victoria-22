@@ -1,0 +1,152 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const AddSupplier = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [materialsSupplied, setMaterialsSupplied] = useState([{ material: '', price_per_unit: '' }]); // State stores an array of objects with material and price
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // Handle input change for material name and price per unit
+    const handleMaterialChange = (index, event) => {
+        const { name, value } = event.target;
+        const values = [...materialsSupplied];
+        values[index][name] = value; // Update either material or price_per_unit
+        setMaterialsSupplied(values);
+    };
+
+    // Add more material input fields (name and price)
+    const addMaterialField = () => {
+        setMaterialsSupplied([...materialsSupplied, { material: '', price_per_unit: '' }]);
+    };
+
+    // Remove material input field (name and price)
+    const removeMaterialField = (index) => {
+        const values = [...materialsSupplied];
+        values.splice(index, 1);
+        setMaterialsSupplied(values);
+    };
+
+    // Validate that the material and price are entered together as a single string (e.g., "material, 60")
+    const validateMaterialFormat = (material) => {
+        const materialPricePattern = /^[a-zA-Z0-9\s]+,\d+$/; // Checks if the format is "material_name,price"
+        return materialPricePattern.test(material);
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Validate that every material is in the correct format
+        const invalidMaterials = materialsSupplied.filter(material => !validateMaterialFormat(`${material.material},${material.price_per_unit}`));
+        if (invalidMaterials.length > 0) {
+            setError('Each material must be entered with a price per unit, separated by a comma (e.g., "material, 60")');
+            return;
+        }
+
+        // Prepare supplier data to send to backend
+        const supplierData = {
+            name,
+            email,
+            mobile_number: mobileNumber,
+            materials_supplied: materialsSupplied.filter(material => material.material !== '' && material.price_per_unit !== '') // Filter out any incomplete material entries
+        };
+
+        setLoading(true);
+
+        try {
+            // Make the POST request to the backend API
+            const response = await axios.post('/admin/suppliers', supplierData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Clear the form and handle successful response
+            setName('');
+            setEmail('');
+            setMobileNumber('');
+            setMaterialsSupplied([{ material: '', price_per_unit: '' }]);
+            alert('Supplier added successfully!');
+        } catch (err) {
+            setError('There was an error adding the supplier.');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div>
+            <h2>Add New Supplier</h2>
+
+            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display validation error */}
+
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Supplier Name:</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label>Mobile Number:</label>
+                    <input
+                        type="text"
+                        value={mobileNumber}
+                        onChange={(e) => setMobileNumber(e.target.value)}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label>Materials Supplied:</label>
+                    {materialsSupplied.map((material, index) => (
+                        <div key={index}>
+                            <input
+                                type="text"
+                                name="material"
+                                value={material.material}
+                                onChange={(e) => handleMaterialChange(index, e)}
+                                placeholder="Material Name"
+                                required
+                            />
+                            <input
+                                type="number"
+                                name="price_per_unit"
+                                value={material.price_per_unit}
+                                onChange={(e) => handleMaterialChange(index, e)}
+                                placeholder="Price per Unit"
+                                required
+                            />
+                            <button type="button" onClick={() => removeMaterialField(index)}>Remove</button>
+                        </div>
+                    ))}
+                    <button type="button" onClick={addMaterialField}>Add Material</button>
+                </div>
+
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Adding Supplier...' : 'Add Supplier'}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+export default AddSupplier;

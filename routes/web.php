@@ -7,6 +7,7 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\EmployeesController;
+use App\Http\Controllers\ProductionManagement; // Add this line for the production cost controller
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/register', [LoginController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [LoginController::class, 'register']);
 
-// Manager routes accessible to admin only
+// Admin routes for managing managers
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/managers', function () {
         if (Auth::user()->role !== 'admin') {
@@ -61,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return app(ManagerController::class)->destroy($email);
     })->name('admin.managers.destroy');
 
+    // Fetch all managers
     Route::get('admin/managers/all', function () {
         if (Auth::user()->role !== 'admin') {
             return redirect('/');
@@ -69,87 +71,34 @@ Route::middleware('auth:sanctum')->group(function () {
     })->name('admin.managers.fetchAll');
 });
 
-// Factory routes accessible to admin only
+// Admin routes for managing productions (only accessible by admins)
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('admin/factories', function () {
+    // Production Routes accessible to admin only
+    Route::get('admin/productions', function () {
         if (Auth::user()->role !== 'admin') {
             return redirect('/');
         }
-        return app(FactoryController::class)->index();
-    })->name('admin.factories.index');
+        return app(ProductionManagement::class)->index();  // Fetch all production records
+    })->name('admin.productions.index');
 
-    Route::post('api/factories', function (Request $request) {
+    Route::post('admin/productions', function (Request $request) {
         if (Auth::user()->role !== 'admin') {
             return redirect('/');
         }
-        return app(FactoryController::class)->store($request);
-    })->name('admin.factories.store');
+        return app(ProductionManagement::class)->store($request);  // Add a new production record
+    })->name('admin.productions.store');
 
-    Route::put('api/factories/{id}', function (Request $request, $id) {
+    Route::put('admin/productions/{id}', function (Request $request, $id) {
         if (Auth::user()->role !== 'admin') {
             return redirect('/');
         }
-        return app(FactoryController::class)->update($request, $id);
-    })->name('admin.factories.update');
+        return app(ProductionManagement::class)->update($request, $id);  // Update an existing production record
+    })->name('admin.productions.update');
 
-    Route::delete('api/factories/{id}', function ($id) {
+    Route::delete('admin/productions/{id}', function ($id) {
         if (Auth::user()->role !== 'admin') {
             return redirect('/');
         }
-        return app(FactoryController::class)->destroy($id);
-    })->name('admin.factories.destroy');
-
-    // Route to fetch available managers
-    Route::get('api/available-managers', function () {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(ManagerController::class)->availableManagers();
-    })->name('available.managers');
-
-    // Route to fetch all factories
-    Route::get('api/factories', function () {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(FactoryController::class)->index();
-    })->name('api.factories.index');
-});
-
-// Employee routes accessible to admin only
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('admin/employees', function () {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(EmployeesController::class)->index();
-    })->name('admin.employees.index');
-
-    Route::post('api/employees', function (Request $request) {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(EmployeesController::class)->store($request);
-    })->name('admin.employees.store');
-
-    Route::get('api/employees/{id}', function ($id) {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(EmployeesController::class)->show($id);
-    })->name('admin.employees.show');
-
-    Route::put('api/employees/{id}', function (Request $request, $id) {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(EmployeesController::class)->update($request, $id);
-    })->name('admin.employees.update');
-
-    Route::delete('api/employees/{id}', function ($id) {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/');
-        }
-        return app(EmployeesController::class)->destroy($id);
-    })->name('admin.employees.destroy');
+        return app(ProductionManagement::class)->destroy($id);  // Delete a production record
+    })->name('admin.productions.destroy');
 });

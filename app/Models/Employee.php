@@ -12,9 +12,9 @@ class Employee extends Model
     protected $fillable = [
         'name',
         'email',
-        'factory_id',
         'daily_wage',
         'is_active',
+        'factory',
     ];
 
     public function factory()

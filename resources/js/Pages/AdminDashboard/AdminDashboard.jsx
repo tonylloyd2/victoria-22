@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-//import AddManager from './AddManager';
-//import UpdateManager from './UpdateManager';
 import axios from 'axios';
-import {AddEmployee} from "./AddEmployee.jsx";
-//import ManagersList from "./ManagerList";
-//import   AddFactory  from "./AddFactory.jsx";
-//import  FactoryList  from "./FactoryList.jsx";
-//import  UpdateFactory  from "./UpdateFactory";
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
+
+import { AddEmployee } from './AddEmployee.jsx';
+import { FactoryList } from './FactoryList.jsx';
+import EmployeeList from './EmployeeList.jsx';
+import ProductionList from "./ProductionList.jsx";
 
 export default function AdminDashboard() {
     const [selectedManager, setSelectedManager] = useState(null);
@@ -61,7 +60,7 @@ export default function AdminDashboard() {
     };
 
     return (
-        <>
+        <BrowserRouter> {/* Wrap everything inside BrowserRouter */}
             <div className="bg-white dark:bg-slate-800 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl">
                 <h3 className="text-slate-900 dark:text-white mt-5 text-base font-medium tracking-tight">
                     Welcome to Inertia with React!
@@ -70,11 +69,10 @@ export default function AdminDashboard() {
                     Your React frontend is now seamlessly integrated with Laravel.
                 </p>
             </div>
-            <AddEmployee />
-         '
-            {/*/!*<AddFactory />*!/*/}
-            {/*<FactoryList factories={factories} onEdit={handleEditFactory} onDelete={handleDeleteFactory} />*/}
-            {/*{selectedFactory && <UpdateFactory factory={selectedFactory} onUpdate={handleUpdateFactory} />}*/}
-        </>
-    );
+            {/*<AddEmployee />*/}
+            {/*<FactoryList />*/}
+            {/*<EmployeeList />*/}
+            <ProductionList />
+        </BrowserRouter>
+);
 }

@@ -24,7 +24,7 @@ class EmployeesController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:employees',
-            'factory_id' => 'required|exists:factories,id',
+            'factory' => 'required',
             'daily_wage' => 'required|numeric',
             'is_active' => 'boolean',
         ]);
@@ -50,7 +50,7 @@ class EmployeesController extends Controller
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:employees,email,' . $id,
-            'factory_id' => 'sometimes|required|exists:factories,id',
+            'factory' => 'sometimes|required',
             'daily_wage' => 'sometimes|required|numeric',
             'is_active' => 'boolean',
         ]);

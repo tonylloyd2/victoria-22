@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export const AddEmployee = () => {
     const [employee, setEmployee] = useState({
         name: '',
         email: '',
-        factory_id: '',
         daily_wage: '',
         is_active: true,
+        factory: '',
     });
+
+    const [managers, setManagers] = useState([]);
+
+    useEffect(() => {
+        // Fetch all managers
+        axios.get('/admin/managers/all')
+            .then(response => {
+                setManagers(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the managers!', error);
+            });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -51,16 +64,6 @@ export const AddEmployee = () => {
                 />
             </div>
             <div>
-                <label>Factory ID:</label>
-                <input
-                    type="text"
-                    name="factory_id"
-                    value={employee.factory_id}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
                 <label>Daily Wage:</label>
                 <input
                     type="number"
@@ -78,6 +81,22 @@ export const AddEmployee = () => {
                     checked={employee.is_active}
                     onChange={(e) => setEmployee({ ...employee, is_active: e.target.checked })}
                 />
+            </div>
+            <div>
+                <label>Factory:</label>
+                <select
+                    name="factory"
+                    value={employee.factory}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Select a factory</option>
+                    {managers.map((manager) => (
+                        <option key={manager.id} value={manager.name}>
+                            {manager.name}
+                        </option>
+                    ))}
+                </select>
             </div>
             <button type="submit">Add Employee</button>
         </form>

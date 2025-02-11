@@ -10,8 +10,7 @@ class ManagerController extends Controller
 {
     public function index()
     {
-        $managers = Manager::all();
-        return response()->json($managers);
+        return inertia::render('ManagerDashboard/Managers');
     }
 
     // Add a new manager
@@ -60,10 +59,7 @@ class ManagerController extends Controller
     }
 
     // Initial logic
-    public function showDashboard()
-    {
-        return Inertia::render('ManagerDashboard/ManagerDashboard');
-    }
+    
     public function availableManagers()
     {
         $managers = \App\Models\User::where('role', 'manager')

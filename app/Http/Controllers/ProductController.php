@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +11,7 @@ class ProductController extends Controller
     // Fetch all products
     public function index()
     {
-        $products = Product::all();
+        $products = Products::all();
         return response()->json($products);
     }
 
@@ -30,7 +30,7 @@ class ProductController extends Controller
         $imagePath = $request->file('image')->store('public/products');
 
         // Create the product
-        $product = Product::create([
+        $product = Products::create([
             'name' => $validated['name'],
             'price_per_unit' => $validated['price_per_unit'],
             'availability_in_stock' => $validated['availability_in_stock'], // Save as boolean
@@ -44,7 +44,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         // Find the product
-        $product = Product::find($id);
+        $product = Products::find($id);
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
@@ -76,7 +76,7 @@ class ProductController extends Controller
     // Delete a product
     public function destroy($id)
     {
-        $product = Product::find($id);
+        $product = Products::find($id);
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }

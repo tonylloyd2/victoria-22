@@ -1,3 +1,5 @@
+import AddOrder from "./AddOrder";
+import OrderList from "./OrderList";
 export default function CustomerDashboard() {
     return (
         <>
@@ -8,6 +10,8 @@ export default function CustomerDashboard() {
                 <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
 issah                </p>
             </div>
+            <AddOrder />
+            <OrderList />
         </>
     );
 }

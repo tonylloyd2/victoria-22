@@ -3,8 +3,8 @@ import axios from 'axios';
 import { BrowserRouter, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { AddEmployee } from './AddEmployee.jsx';
 import { FactoryList } from './FactoryList.jsx';
-import EmployeeList from './EmployeeList.jsx';
-import ProductionList from "./ProductionList.jsx";
+import { EmployeeList } from './EmployeeList.jsx'; // <-- Add this import
+import { ProductionList } from './ProductionList.jsx'; // <-- Add this import
 import { Users, Factory, BarChart3, LogOut, ChevronDown } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -26,43 +26,16 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await axios.post('/logout');
       window.location.href = '/login';
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
-  const handleEditManager = (manager) => {
-    setSelectedManager(manager);
-  };
-
-  const handleDeleteManager = async (email) => {
-    try {
-      await axios.delete(`/admin/managers/${email}`);
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleEditFactory = (factory) => {
-    setSelectedFactory(factory);
-  };
-
-  const handleDeleteFactory = async (id) => {
-    try {
-      await axios.delete(`/api/factories/${id}`);
-      setFactories(factories.filter(factory => factory.id !== id));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-[#f4f7fc]">
-        {/* Sidebar */}
         <div className="fixed left-0 top-0 w-64 h-screen bg-[#2c3e50]">
           <div className="p-4">
             <h2 className="text-white text-xl font-semibold">Admin Panel</h2>
@@ -95,17 +68,13 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="ml-64">
-          {/* Header */}
           <div className="bg-white shadow-md border-b border-gray-200 w-full fixed z-10 top-0 left-0">
             <div className="flex justify-between items-center h-16 px-6">
-              {/* Page Title */}
               <h1 className="text-2xl font-semibold text-gray-800">
                 {activePage.charAt(0).toUpperCase() + activePage.slice(1)}
               </h1>
 
-              {/* Profile Button with Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -115,7 +84,6 @@ export default function AdminDashboard() {
                   <ChevronDown className="h-4 w-4" />
                 </button>
 
-                {/* Dropdown Menu */}
                 {showProfileMenu && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
@@ -133,12 +101,11 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Content Area with padding for fixed header */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-20">
             <Routes>
               <Route path="/employees" element={<EmployeeList />} />
               <Route path="/factories" element={<FactoryList />} />
-              <Route path="/production" element={<ProductionList />} />
+              <Route path="/production" element={<ProductionList />} /> {/* Add Production Route */}
               <Route path="/add-employee" element={<AddEmployee />} />
             </Routes>
           </div>

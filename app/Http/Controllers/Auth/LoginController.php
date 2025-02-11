@@ -15,6 +15,11 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return Inertia::render('Login');
+    }  
+
+    public function home()
+    {
+        return Inertia::render('Home');
     }
 
     public function login(Request $request)
@@ -36,7 +41,7 @@ class LoginController extends Controller
                 case 'admin':
                     return Inertia::render('AdminDashboard/AdminDashboard', $response);
                 case 'manager':
-                    return Inertia::render('ManagerDashboard/ManagerDashboard', $response);
+                    return inertia::render('ManagerDashboard/ManagerDashboard', $response);
                 case 'customer':
                     return Inertia::render('CustomerDashboard/CustomerDashboard', $response);
                 default:

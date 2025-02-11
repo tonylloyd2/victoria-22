@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->decimal('daily_wage', 10, 2);
             $table->boolean('is_active')->default(true);
-            $table->string('factory')->unique();
+            $table->string('factory');
             $table->timestamps();
 
             $table->foreign('factory_id')->references('id')->on('factory')->onDelete('cascade');

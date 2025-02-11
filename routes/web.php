@@ -10,15 +10,16 @@ use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\ProductionManagement;
 use App\Http\Controllers\SupplierController; // Correct namespace
 use App\Http\Controllers\MaterialsController; // Correct namespace for Materials
+use App\Http\Controllers\ProductController; // Correct namespace for Products
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
-// Post routes
-Route::get('/', [PostController::class, 'index']);
-Route::resource('posts', PostController::class)->except('index');
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WeeklyPlanController;
 
 // Authentication routes
+Route::get('/', [LoginController::class, 'home'])->name('home');
+
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
@@ -212,4 +213,56 @@ Route::middleware('auth:sanctum')->group(function () {
         }
         return app(MaterialsController::class)->delete($id);  // Delete a material
     })->name('admin.materials.destroy');
+
+    Route::get('api/weeklyplans', function () {
+        return app(WeeklyPlanController::class)->index();
+    })->name('api.weeklyplans.index');
+    Route::post('api/weeklyplans', function (Request $request) {
+        return app(WeeklyPlanController::class)->store($request);
+    })->name('api.weeklyplans.store');
+    Route::get('api/weeklyplans/{id}', function ($id) {
+        return app(WeeklyPlanController::class)->show($id);
+    })->name('api.weeklyplans.show');
+    Route::put('api/weeklyplans/{id}', function (Request $request, $id) {
+        return app(WeeklyPlanController::class)->update($request, $id);
+    })->name('api.weeklyplans.update');
+    Route::delete('api/weeklyplans/{id}', function ($id) {
+        return app(WeeklyPlanController::class)->destroy($id);
+    })->name('api.weeklyplans.destroy');
+
+
+});
+Route::middleware('auth:sanctum')->group(function () {
+   Route::get('api/orders', function () {
+    if(Auth::user()->role !== 'customer'){
+        return redirect('/');
+    }
+    return app(OrderController::class)->index();
+    })->name('api.orders.index');
+    
+    Route::post('api/orders', function(Request $request){
+        if(Auth::user()->role !== 'customer'){
+            return redirect('/');
+        }
+        return app(OrderController::class)->store($request);
+    })->name('api.orders.store');
+    Route::get('api/orders/{id}', function($id){
+        if(Auth::user()->role !== 'customer'){
+            return redirect('/');
+        }
+        return app(OrderController::class)->show($id);
+    })->name('api.orders.show');
+    Route::delete('api/orders/{id}', function($id){
+        if(Auth::user()->role !== 'customer'){
+            return redirect('/');
+        }
+        return app(OrderController::class)->destroy($id);
+    })->name('api.orders.destroy');
+    Route::put('api/orders/{id}', function(Request $request, $id){
+        if(Auth::user()->role !== 'customer'){
+            return redirect('/');
+        }
+        return app(OrderController::class)->update($request, $id);
+    })->name('api.orders.update');
+
 });
